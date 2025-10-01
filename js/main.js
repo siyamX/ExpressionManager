@@ -2,9 +2,10 @@ var csInterface = new CSInterface();
 var expressions = [];
 var editingId = null;
 var copySound = new Audio('./sfx/copy.mp3');
+var favoriteSound = new Audio('./sfx/favorite.mp3');
 copySound.volume = 0.7;
+favoriteSound.volume = 0.7;
 
-// DOM elements
 var addBtn = document.getElementById('addBtn');
 var addForm = document.getElementById('addForm');
 var cancelBtn = document.getElementById('cancelBtn');
@@ -88,17 +89,22 @@ function saveExpression() {
     return;
   }
 
-  if (editingId) {
-    expressions = expressions.filter(function (e) {
-      return e.id !== editingId;
-    });
-  }
+  var existingExpr = expressions.find(function (e) {
+    return e.id === editingId;
+  });
 
   var expression = {
     id: editingId || Date.now(),
     name: name,
     code: code,
+    favorite: existingExpr ? existingExpr.favorite : false,
   };
+
+  if (editingId) {
+    expressions = expressions.filter(function (e) {
+      return e.id !== editingId;
+    });
+  }
 
   expressions.push(expression);
   saveToStorage();
@@ -114,6 +120,23 @@ function clearForm() {
   exprCode.value = '';
 }
 
+function toggleFavorite(id) {
+  var expr = expressions.find(function (e) {
+    return e.id === id;
+  });
+  if (!expr) return;
+
+  expr.favorite = !expr.favorite;
+
+  if (expr.favorite) {
+    favoriteSound.currentTime = 0;
+    favoriteSound.play();
+  }
+
+  saveToStorage();
+  renderExpressions();
+}
+
 function renderExpressions() {
   if (expressions.length === 0) {
     expressionsList.innerHTML =
@@ -121,12 +144,30 @@ function renderExpressions() {
     return;
   }
 
-  expressionsList.innerHTML = expressions
+  var sortedExpressions = expressions.sort(function (a, b) {
+    if (a.favorite === b.favorite) {
+      return a.name.localeCompare(b.name);
+    }
+    return b.favorite - a.favorite;
+  });
+
+  expressionsList.innerHTML = sortedExpressions
     .map(function (expr) {
       return (
-        '<div class="expression-item" data-id="' +
+        '<div class="expression-item' +
+        (expr.favorite ? ' favorite' : '') +
+        '" data-id="' +
         expr.id +
         '">' +
+        '<div class="item-actions-left">' +
+        '<button class="favorite-btn" onclick="toggleFavorite(' +
+        expr.id +
+        ')" title="Toggle Favorite">' +
+        '<img src="icons/' +
+        (expr.favorite ? 'star2.svg' : 'star1.svg') +
+        '" alt="Favorite" width="16" height="16">' +
+        '</button>' +
+        '</div>' +
         '<span class="expression-name">' +
         escapeHtml(expr.name) +
         '</span>' +
@@ -254,3 +295,4 @@ function setPanelColor() {
 
 window.deleteExpression = deleteExpression;
 window.editExpression = editExpression;
+window.toggleFavorite = toggleFavorite;

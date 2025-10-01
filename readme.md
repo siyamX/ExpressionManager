@@ -4,11 +4,11 @@ Save and copy your favorite After Effects expressions without switching to Notep
 
 ## About
 
-I'm a video editor and got tired of opening Notepad every time I needed my favorite expressions. Couldn't find a good solution, so I built this.
-
-I'm not a programmer—the code might be messy, but it works! This is open source, so feel free to modify it or suggest features.
+I'm a video editor who got tired of switching to Notepad every time I needed an expression. Couldn't find a good extension for this, so I built one myself. I'm not a programmer, so the code might be messy, but it works! Feel free to modify it or suggest features—it's completely open source.
 
 **Connect:** [LinkedIn](https://www.linkedin.com/in/siyamedits/) • [Twitter](https://x.com/siyamedits) • [Website](https://siyamedits.com/)
+
+![Expression Manager Interface](/UI/2.png)
 
 ## Installation
 
@@ -21,17 +21,10 @@ I'm not a programmer—the code might be messy, but it works! This is open sourc
 
 After Effects needs a registry edit to show unsigned extensions.
 
-**Quick Steps:**
-
-1. Press **Win + R**, type `regedit`, hit OK
-2. Go to: `Computer\HKEY_CURRENT_USER\Software\Adobe`
-3. Find the CSXS folder with the highest number (like `CSXS.12`)
-   - **No CSXS folder?** Ask ChatGPT which number to create for your AE version, then create that folder
-4. Right-click the CSXS folder → **New** → **String Value**
-5. Name it `PlayerDebugMode` with value `1`
-
-That's it! Restart After Effects.
+**[Follow this ChatGPT guide](https://chatgpt.com/share/68dcc406-792c-8003-bb35-7b782bda6867)** — just replace the AE version with yours.
 
 ---
 
-**Like it? Give it a ⭐ on GitHub!**
+```
+⭐ Like it? Give it a star on GitHub!
+```
